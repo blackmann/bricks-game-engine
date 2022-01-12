@@ -5,9 +5,27 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>999 Racing</title>
+
+  <style>
+    @font-face {
+      font-family: 'DigitalNormal';
+      src: url('./DigitalNormal.otf');
+    }
+
+    p.font-decoy {
+      font-family: 'DigitalNormal', sans-serif;
+      position: absolute;
+      left: -100px;
+      top: -100px;
+    }
+
+    #hud {
+      margin-left: 1rem;
+    }
+  </style>
 </head>
 <body>
-
+  <p class="font-decoy">H</p>
   <script src="./main.js" type="module"></script>
 </body>
 </html>

@@ -1,8 +1,8 @@
-import BricksEngine, { Sprite } from './engine.js'
+import BricksEngine, { HUD, Sprite } from './engine.js'
 import gameObjects from './game-objects.js'
 
 const engine = new BricksEngine({
-  screen: { width: 16, height: 32, pixelSize: 5, gutter: 1 },
+  screen: { width: 16, height: 32, pixelSize: 15, gutter: 4 },
 })
 
 const edgeLeft = new Sprite({
@@ -57,3 +57,8 @@ engine.addObjects(sprite, edgeLeft, edgeRight, divider)
 
 
 engine.start()
+
+const hudCanvas = document.getElementById('hud')
+const hud = new HUD({height: 190, width: 100})
+
+hud.draw()

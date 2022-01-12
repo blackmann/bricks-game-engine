@@ -10,6 +10,83 @@ export class Utils {
   }
 }
 
+export class HUD {
+  static baseFeatures = [
+    'score',
+    'high-score',
+    'graphic',
+    'level',
+    'sound',
+    'pause',
+  ]
+
+  /**
+   * @param {object} options
+   * @param {HTMLCanvasElement} options.canvas
+   */
+
+  constructor({
+    canvas,
+    height = 40,
+    width = 20,
+    features = HUD.baseFeatures,
+  }) {
+
+    if (!canvas) {
+      canvas = document.createElement('canvas')
+
+      canvas.width = width
+      canvas.height = height
+
+      document.body.appendChild(canvas)
+    } else {
+      canvas.width = width
+      canvas.height = height
+    }
+
+    canvas.id = 'hud'
+
+    this.canvas = canvas
+    this.features = features
+    this.height = height
+    this.width = width
+
+    this.state = {}
+  }
+
+  drawFrame() {
+    const ctx = this.canvas.getContext('2d')
+
+    ctx.beginPath()
+    ctx.rect(0, 0, this.width, this.height)
+    ctx.stroke()
+
+    ctx.closePath()
+  }
+
+  draw() {
+    document.fonts.ready.then(() => {
+      this.drawFrame()
+
+      const ctx = this.canvas.getContext('2d')
+      ctx.font = '12pt DigitalNormal'
+
+      HUD.baseFeatures.forEach((feature, i) => {
+        ctx.fillStyle = i === 3 ? '#aaa' : '#222'
+
+        if (feature !== 'graphic') {
+          ctx.fillText(feature.toUpperCase(), 10, (i+2) * 12 + 10 * i)
+        } else {
+        }
+      })
+    })
+  }
+
+  update(state) {
+    this.state = state
+  }
+}
+
 export class Sprite {
   constructor({
     name = 'sprite',
@@ -125,6 +202,7 @@ export class Sprite {
 class BricksEngine {
   /**
    * @param {object} options
+   * @param {HTMLCanvasElement} options.canvas
    * @param {number} options.fps
    * @param {object} options.screen
    * @param {number} options.screen.gutter Space between pixels
@@ -137,16 +215,19 @@ class BricksEngine {
     fps = 12,
     screen: { gutter = 1, height = 45, pixelSize = 5, width = 45 } = {},
   } = {}) {
+    const _width = width * pixelSize + (width - 1) * gutter
+    const _height = height * pixelSize + (height - 1) * gutter
+
     if (!canvas) {
       canvas = document.createElement('canvas')
-
-      const _width = width * pixelSize + (width - 1) * gutter
-      const _height = height * pixelSize + (height - 1) * gutter
 
       canvas.width = _width
       canvas.height = _height
 
       document.body.appendChild(canvas)
+    } else {
+      canvas.width = _width
+      canvas.height = _height
     }
 
     this.canvas = canvas
@@ -195,7 +276,9 @@ class BricksEngine {
       for (let j = i + 1; j < collidables.length; j++) {
         const collidee = collidables[j]
 
-        if (Utils.hasCommonGroup(collider.collisionGroup, collidee.collisionGroup)) {
+        if (
+          Utils.hasCommonGroup(collider.collisionGroup, collidee.collisionGroup)
+        ) {
           // collision is simple with this engine style
           // if there's no intersection between the x coordinates, then
           // there's no intersection between the y
@@ -279,6 +362,5 @@ class BricksEngine {
     clearInterval(this.renderInterval)
   }
 }
-
 
 export default BricksEngine
